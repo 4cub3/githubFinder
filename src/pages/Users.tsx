@@ -37,7 +37,7 @@ const Users: React.FC = () => {
   });
 
   const userData = async () => {
-    const resonse = await fetch(`http://api.github.com/users/${login}`, {
+    const resonse = await fetch(`https://api.github.com/users/${login}`, {
       headers: {
         authorization: "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",
       },
