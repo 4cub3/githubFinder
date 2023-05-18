@@ -1,48 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import { FaUsers, FaUser, FaSquare, FaStore, FaLink, FaEye, FaStar, FaInfo } from "react-icons/fa";
-import {CiForkAndKnife} from 'react-icons/ci'
-import useHttp from "../hooks/useHTTP";
-interface SpeciffiedUserType {
-  bio: string;
-  followers: number;
-  following: number;
-  name: string;
-  public_gists: number;
-  public_repos: number;
-  twitter_username: string;
-  type: string;
-  html_url: string;
-  location: string | null;
-  blog: string;
-  hireable: string | null;
-}
-interface RepoTypes {
-  id: number;
-  name: string;
-  description: string;
-  watchers_count: number;
-  stargazers_count: number;
-  forks: number;
-  open_issues: number;
-  html_url: string;
-}
+import { FaUsers, FaUser, FaSquare, FaStore } from "react-icons/fa";
+import { SpeciffiedUserType } from "../types/Types";
+import Repos from "../Components/Repositories";
+
 const Users: React.FC = () => {
   const params = useParams();
   const { users } = useContext(UserContext);
-  const [repoData, setRepoData] = useState<RepoTypes[]>([
-    {
-      id: 0,
-      description: "",
-      forks: 0,
-      name: "",
-      open_issues: 0,
-      stargazers_count: 0,
-      watchers_count: 0,
-      html_url: "",
-    },
-  ]);
 
   const specifiedUser = users.find((user) => user.login === params.login);
   const { avatar_url, login } = specifiedUser!;
@@ -90,43 +55,6 @@ const Users: React.FC = () => {
     hireable,
   } = userProfile;
 
-  //repo
-  const { request } = useHttp();
-
-  useEffect(() => {
-    const applyData = (data: any) => {
-      setRepoData(data);
-    //   console.log(data)
-    };
-    request(
-      {
-        url: `https://api.github.com/users/${login}/repos`,
-        headers: {
-          authorization: "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",
-        },
-      },
-      applyData
-    );
-  }, []);
-
-  const repositories = repoData.map((rep) => {
-    return (
-      <div className="bg-gray-900 p-10 rounded-lg space-y-4" key={rep.id}>
-        <h2 className="text-white flex gap-2 items-center">
-         <a href={rep.html_url}>
-             <FaLink /> 
-            </a>
-             {rep.name}
-        </h2>
-        <p className="text-white">{rep.description}</p>
-        <div className="flex gap-2 items-center">
-          <span  className="px-4 mr-2 bg-blue-950 text-blue-200 rounded-xl flex items-center gap-2"><FaEye />{rep.watchers_count}</span> <span className="px-4  mr-2 bg-green-950 text-green-200 rounded-xl flex items-center gap-2"><FaStar />{rep.stargazers_count}</span>{" "}
-          <span className="px-4  mr-2 bg-red-950 text-red-200 rounded-xl flex items-center gap-2"><FaInfo />{rep.open_issues}</span> <span className="px-4  mr-2 bg-yellow-950 text-yellow-200 rounded-xl flex items-center gap-2"><CiForkAndKnife /> {rep.forks}</span>
-        </div>
-      </div>
-    );
-  });
-     
   return (
     <section className="my-10">
       <div className=" my-10 p-4 uppercase text-white">
@@ -190,34 +118,34 @@ const Users: React.FC = () => {
             <h3 className="text-gray-600">followers</h3>
             <p className="text-[2rem] font-extrabold">{followers}</p>
           </div>
-          <FaUsers size={50} className='text-pink-600' />
+          <FaUsers size={50} className="text-pink-600" />
         </article>
         <article className="mt-16 flex justify-between gap-20 p-6 text-white">
           <div>
             <h3 className="text-gray-600">following</h3>
             <p className="text-[2rem] font-extrabold">{following}</p>
           </div>
-          <FaUser size={50} className='text-pink-600' />
+          <FaUser size={50} className="text-pink-600" />
         </article>
         <article className="mt-16 flex justify-between gap-20 p-6 text-white">
           <div>
             <h3 className="text-gray-600">Public Repos</h3>
             <p className="text-[2rem] font-extrabold">{public_repos}</p>
           </div>
-          <FaSquare size={50} className='text-pink-600' />
+          <FaSquare size={50} className="text-pink-600" />
         </article>
         <article className="mt-16 flex justify-between gap-20 p-6 text-white">
           <div>
             <h3 className="text-gray-600">Public Gist</h3>
             <p className="text-[2rem] font-extrabold">{public_gists}</p>
           </div>
-          <FaStore size={50} className='text-pink-600' />
+          <FaStore size={50} className="text-pink-600" />
         </article>
       </div>
 
-      <div className="p-4 shadow-lg mt-20">
+      <div className="mt-20 p-4 shadow-lg">
         <h1 className="text-[2.2rem] text-white">Latest Repository </h1>
-        <div className="mt-6 space-y-4">{repositories}</div>
+        <div className="mt-6 space-y-4">{<Repos login={login} />}</div>
       </div>
     </section>
   );

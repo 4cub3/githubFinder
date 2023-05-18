@@ -53,6 +53,8 @@ const UserContextProvider: React.FC<UserContextProps> = ({ children }) => {
     const userHandler = ()=>{
       setUsers([]);
     }
+
+    
   const contextValues = {
     users,
     searchUser: getUser,
