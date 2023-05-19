@@ -1,16 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, {useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
 import { FaUsers, FaUser, FaSquare, FaStore } from "react-icons/fa";
 import { SpeciffiedUserType } from "../types/Types";
 import Repos from "../Components/Repositories";
 
 const Users: React.FC = () => {
   const params = useParams();
-  const { users } = useContext(UserContext);
-
-  const specifiedUser = users.find((user) => user.login === params.login);
-  const { avatar_url, login } = specifiedUser!;
   const [userProfile, setUserProfile] = useState<SpeciffiedUserType>({
     bio: "",
     followers: 0,
@@ -24,10 +19,12 @@ const Users: React.FC = () => {
     location: "",
     blog: "",
     hireable: "",
+    avatar_url: "",
+    login: '',
   });
 
   const userData = async () => {
-    const resonse = await fetch(`https://api.github.com/users/${login}`, {
+    const resonse = await fetch(`https://api.github.com/users/${params.login}`, {
       headers: {
         authorization: "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",
       },
@@ -53,6 +50,8 @@ const Users: React.FC = () => {
     location,
     blog,
     hireable,
+    avatar_url,
+    login,
   } = userProfile;
 
   return (

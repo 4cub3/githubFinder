@@ -11,6 +11,8 @@
     location: string | null;
     blog: string;
     hireable: string | null;
+    avatar_url: string;
+    login : string;
   }
   export interface RepoTypes {
     id: number;
@@ -30,3 +32,4 @@
     message: string;
     isLoading: boolean
 }
+export type DataType = { items: []; } | object[]

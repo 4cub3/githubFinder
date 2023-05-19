@@ -6,7 +6,7 @@ const useHttp = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const request = useCallback(
     async (
-      requestData: { url: string; method?: string; headers?: {}; body?: string },
+      requestData: { url: string; method?: string; headers?: {authorization : string}; body?: string },
       applyData: (a:{items:[]}) => void
     ) => {
       try {
@@ -22,10 +22,12 @@ const useHttp = () => {
         setLoading(false);
         const data = await response.json();
         applyData(data);
-      } catch (e: any) {
+      } catch (e) {
         setLoading(false);
         setError(true);
-        setErrorMessage(e.message);
+        if(e instanceof Error) {
+          setErrorMessage(e.message);
+        }
       }
     },
     []

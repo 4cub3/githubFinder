@@ -3,9 +3,7 @@ import { CiForkAndKnife } from "react-icons/ci";
 import { FaLink, FaEye, FaStar, FaInfo } from "react-icons/fa";
 import { RepoTypes } from "../../types/Types";
 
-import useHttp from "../../hooks/useHTTP";
 interface RepoProps {
-  // rep: RepoTypes;
   login: string;
 }
 
@@ -22,24 +20,19 @@ const Repos: React.FC<RepoProps> = ({ login }) => {
       html_url: "",
     },
   ]);
-  //repo
-  const { request } = useHttp();
 
   useEffect(() => {
-    const applyData = (data: any) => {
-      setRepoData(data);
-      //   console.log(data)
-    };
-    request(
-      {
-        url: `https://api.github.com/users/${login}/repos`,
-        headers: {
-          authorization: "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",
-        },
-      },
-      applyData
-    );
-  }, []);
+    (async () => {
+      if (login) {
+        const respone = await fetch(
+          `https://api.github.com/users/${login}/repos`
+        );
+        const data: RepoTypes[] = await respone.json();
+
+        setRepoData(data);
+      }
+    })();
+  }, [setRepoData, login]);
 
   const repositories = repoData.map((rep) => {
     return (
